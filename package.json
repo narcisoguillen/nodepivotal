@@ -1,0 +1,20 @@
+{
+  "name": "nodepivotal",
+  "version": "0.11.2",
+  "description": "Node and PivotalTracker",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/narcisoguillen/nodepivotal.git"
+  },
+  "keywords": [
+    "node",
+    "pivotal",
+    "tracker"
+  ],
+  "author": "Narciso Guillen",
+  "license": "BSD",
+  "readmeFilename": "README.md"
+}
