@@ -56,3 +56,5 @@ pivotalnode.getToken = function(data, callback, flag){
   });
 
 };
+
+module.exports = pivotalnode;
