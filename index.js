@@ -18,7 +18,6 @@ var pivotalnode = {
   }
 };
 
-
 pivotalnode.responseHandler = function(callb){
   return function(res){
     res.on('data', function(data){
@@ -28,7 +27,6 @@ pivotalnode.responseHandler = function(callb){
     });
   };
 };
-
 
 pivotalnode.getToken = function(data, cb){
   var callback = typeof cb === 'function' ? cb : function(){ };
@@ -51,6 +49,33 @@ pivotalnode.getToken = function(data, cb){
   }));
 
   request.write(stringData);
+  request.end();
+
+  request.on('error', function(error){
+    return callback(error);
+  });
+
+};
+
+pivotalnode.activityFeed = function(data, cb){
+  var callback = typeof data === 'function' ? data : typeof cb === 'function' ? cb : function(){ };
+  var options  = new this.requestOptions();
+
+  if(!this.token){ return callback('Token is missing'); }
+
+  var stringData = querystring.stringify(data);
+  var params     = stringData ? ('?' + stringData) : '';
+
+  options.path    = '/services/v3/activities' + params ;
+  options.method  = 'GET';
+  options.headers = { 'X-TrackerToken': this.token };
+
+  console.log(inspect(options));
+
+  var request = https.request(options, new this.responseHandler(function(error, result){
+    return callback(error, result);
+  }));
+
   request.end();
 
   request.on('error', function(error){
