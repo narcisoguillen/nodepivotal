@@ -9,44 +9,46 @@ var noAccess    = new RegExp(/Access denied/);
 var config      = require('./config');
 
 var pivotalnode = {
-  token: null
+  token: null,
+  requestOptions: function(options){
+    return {
+      host: 'www.pivotaltracker.com',
+      port: config.PORT || 443,
+    };
+  }
 };
 
-pivotalnode.__requestOptions = function(options){
-  var requestOptions    = options || {};
-  requestOptions.host   = 'www.pivotaltracker.com';
-  requestOptions.port   = config.PORT || 443;
-  requestOptions.method = options.method || 'POST';
 
-  return requestOptions;
-};
-
-pivotalnode.getToken = function(data, callback, flag){
-
-  if(!data){ return callback('Missing credentials'); }
-
-  var stringData = querystring.stringify(data); 
-  var options    = new pivotalnode.__requestOptions({
-    method: 'POST',
-    path: '/services/v3/tokens/active',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',  
-      'Content-Length': stringData.length  
-    }
-  });
-
-  var request = https.request(options, function(res){ 
+pivotalnode.responseHandler = function(callb){
+  return function(res){
     res.on('data', function(data){
-
-      if(noAccess.test(data.toString())){ return callback(data.toString()); }
-
       parser.parseString(data, function (error, result) {
-        if(flag){ pivotalnode.token = result.token.guid[0]; }
-        return callback(error, result);
+        return callb(error, result);
       });
-      
     });
-  });
+  };
+};
+
+
+pivotalnode.getToken = function(data, cb){
+  var callback = typeof cb === 'function' ? cb : function(){ };
+  var options  = new this.requestOptions();
+
+  if(!data || typeof data !== 'object'){ return callback('Missing credentials'); }
+
+  var stringData = querystring.stringify(data);
+
+  options.path    = '/services/v3/tokens/active';
+  options.method  = 'POST';
+  options.headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',  
+      'Content-Length': stringData.length
+  };
+
+  var request = https.request(options, new this.responseHandler(function(error, result){
+    pivotalnode.token = result ? result.token.guid[0] : null;
+    return callback(error, result);
+  }));
 
   request.write(stringData);
   request.end();
