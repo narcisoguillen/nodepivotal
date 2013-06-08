@@ -14,6 +14,7 @@ var pivotalnode = {
     return {
       host: 'www.pivotaltracker.com',
       port: config.PORT || 443,
+      method: 'GET'
     };
   }
 };
@@ -67,7 +68,6 @@ pivotalnode.activityFeed = function(data, cb){
   var params     = stringData ? ('?' + stringData) : '';
 
   options.path    = '/services/v3/activities' + params ;
-  options.method  = 'GET';
   options.headers = { 'X-TrackerToken': this.token };
 
   var request = https.request(options, new this.responseHandler(function(error, result){
@@ -89,7 +89,6 @@ pivotalnode.getProjects = function(cb){
   if(!this.token){ return callback('Token is missing'); }
 
   options.path    = '/services/v3/projects';
-  options.method  = 'GET';
   options.headers = { 'X-TrackerToken': this.token };
 
   var request = https.request(options, new this.responseHandler(function(error, result){
