@@ -70,8 +70,6 @@ pivotalnode.activityFeed = function(data, cb){
   options.method  = 'GET';
   options.headers = { 'X-TrackerToken': this.token };
 
-  console.log(inspect(options));
-
   var request = https.request(options, new this.responseHandler(function(error, result){
     return callback(error, result);
   }));
@@ -82,6 +80,27 @@ pivotalnode.activityFeed = function(data, cb){
     return callback(error);
   });
 
+};
+
+pivotalnode.getProjects = function(cb){
+  var callback = typeof cb === 'function' ? cb : function(){ };
+  var options  = new this.requestOptions();
+
+  if(!this.token){ return callback('Token is missing'); }
+
+  options.path    = '/services/v3/projects';
+  options.method  = 'GET';
+  options.headers = { 'X-TrackerToken': this.token };
+
+  var request = https.request(options, new this.responseHandler(function(error, result){
+    return callback(error, result);
+  }));
+
+  request.end();
+
+  request.on('error', function(error){
+    return callback(error);
+  });
 };
 
 module.exports = pivotalnode;
