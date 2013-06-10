@@ -88,14 +88,15 @@ pivotalnode.activityFeed = function(data, cb){
 
 };
 
-pivotalnode.getProjects = function(cb){
-  var callback = typeof cb === 'function' ? cb : function(){ };
+pivotalnode.getProject = function(data, cb){
+  var callback = typeof data === 'function' ? data : typeof cb === 'function' ? cb : function(){ };
   var options  = new this.requestOptions();
 
   if(!this.token){ return callback('Token is missing'); }
 
   options.path    = '/services/v3/projects';
   options.headers = { 'X-TrackerToken': this.token };
+  options.path+= data.project ? '/' + data.project : '';
 
   var request = https.request(options, new this.responseHandler(function(error, result){
     return callback(error, result);
