@@ -37,7 +37,12 @@ Example:
 
 ###All my projects
 
-    pivotalnode.getProjects(function(error, result){
+    pivotalnode.getProject(function(error, result){
       //..
     });
     
+###Get a single project
+
+    pivotalnode.getProject({ project: :ID }, function(error, result){
+      //..
+    });
