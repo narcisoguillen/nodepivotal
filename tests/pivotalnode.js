@@ -12,7 +12,7 @@ vows.describe('PivotalNode').addBatch({
         password: 'taquitos'
       };
 
-      pivotalnode.getToken(userData, this.callback, false);
+      pivotalnode.getToken(userData, this.callback);
     },
     "and returns da access token" : function(err, PToken){
       assert.isNull(err);
@@ -28,7 +28,7 @@ vows.describe('PivotalNode').addBatch({
         password: 'burritos'
       };
 
-      pivotalnode.getToken(userData, this.callback, false);
+      pivotalnode.getToken(userData, this.callback);
     },
     "and returns da error" : function(err, PToken){
       assert.isTrue(PToken === undefined);
@@ -36,5 +36,25 @@ vows.describe('PivotalNode').addBatch({
     }
   },
 
+  'Ask for all my activity feed' : {
+    topic: function(){
+
+      var userData = {
+        username: 'o3704923@rtrtr.com',
+        password: 'taquitos'
+      };
+
+      var self = this;
+
+      pivotalnode.getToken(userData, function(){
+        pivotalnode.activityFeed(self.callback);
+      });
+    },
+
+    "and returns all the activity" : function(err, activity){
+      assert.isNull(err);
+      assert.isNotNull(activity);
+    }
+  }
 
 }).run();
