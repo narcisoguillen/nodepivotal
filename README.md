@@ -1,5 +1,22 @@
 #PivotalNode
 
+Easy and simple way of communication between pivotaltracker with nodeJS
+
+    pivotalnode.getToken({username: 'o3704923@rtrtr.com', password: 'taquitos'}, function(error, PToken){
+
+      pivotalnode.getProject(function(error, projects){
+       // We have all the projects !!
+      });
+
+    });
+
+
+##Tests
+
+Run tests
+
+    node tests/pivotalnode.js
+
 ##Get a token
 
     pivotalnode.getToken({username: 'o3704923@rtrtr.com', password: 'taquitos'}, function(error, PToken){
