@@ -79,7 +79,40 @@ vows.describe('PivotalNode').addBatch({
       assert.isNull(err);
       assert.isNotNull(activity);
     }
+  },
+
+  'Ask for all my projects' : {
+    topic: function(){
+
+      var callback = this.callback;
+
+      register(function(err, token){ 
+        pivotalnode.getProject(callback);
+      });
+
+    },
+
+    "and returns the projects" : function(err, activity){
+      assert.isNull(err);
+      assert.isNotNull(activity);
+    }
+  },
+
+  'Ask for a specific project' : {
+    topic: function(){
+
+      var callback = this.callback;
+
+      register(function(err, token){ 
+        pivotalnode.getProject({ project: 687223 }, callback);
+      });
+
+    },
+
+    "and returns the projects" : function(err, activity){
+      assert.isNull(err);
+      assert.isNotNull(activity);
+    }
   }
-  
 
 }).run();
