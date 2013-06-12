@@ -19,7 +19,7 @@ var pivotalnode = {
   }
 };
 
-pivotalnode.responseHandler = function(callb){
+pivotalnode.responseParser = function(callb){
   return function(res){
     res.on('data', function(data){
       parser.parseString(data, function (error, result) {
@@ -44,7 +44,7 @@ pivotalnode.getToken = function(data, cb){
       'Content-Length': stringData.length
   };
 
-  var request = https.request(options, new this.responseHandler(function(error, result){
+  var request = https.request(options, new this.responseParser(function(error, result){
     pivotalnode.token = result ? result.token.guid[0] : null;
     return callback(error, result);
   }));
@@ -76,7 +76,7 @@ pivotalnode.activityFeed = function(data, cb){
   options.path    = project ? '/services/v3/projects/'+project+'/activities' : '/services/v3/activities';
   options.path+=params;
 
-  var request = https.request(options, new this.responseHandler(function(error, result){
+  var request = https.request(options, new this.responseParser(function(error, result){
     return callback(error, result);
   }));
 
@@ -98,7 +98,7 @@ pivotalnode.getProject = function(data, cb){
   options.headers = { 'X-TrackerToken': this.token };
   options.path+= data.project ? '/' + data.project : '';
 
-  var request = https.request(options, new this.responseHandler(function(error, result){
+  var request = https.request(options, new this.responseParser(function(error, result){
     return callback(error, result);
   }));
 
